@@ -6,8 +6,8 @@
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 
-title: fastpages
-description: An easy to use blogging platform with support for Jupyter Notebooks.
+title: Data-science-blog
+description: A simple blog at which I descibe the data-science related topics
 github_username: tugot17
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "data-science-blog"
