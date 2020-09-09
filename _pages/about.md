@@ -4,6 +4,8 @@ title: About Me
 permalink: /about/
 ---
 
-Data science praticioner, currently the most interested in Explainable AI methods and it's applications in the medicine. 
+My github account can be found here **[here](https://github.com/tugot17)**.
 
-My github profile can be found [here](https://github.com/tugot17)
+
+
+
