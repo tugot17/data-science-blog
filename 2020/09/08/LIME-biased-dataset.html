@@ -170,6 +170,15 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>categories: [XAI, Pytorch, LIME]</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>In 2016 Marco Riberio et al. proposed a new method for explaining AI models named LIME. Abbreviation LIME stands for Local Interpretable Model-Agnostic Explanations. The algorithm is capable of explaining any type of machine-learning model (that's why it is named "model agnostic) and works well with tabular, language, and image data.</p>
 <p>The LIME algorithm is available in the form of a python package, its code can be found on the Github at <a href="https://github.com/marcotcr/lime">https://github.com/marcotcr/lime</a></p>
 <p>In this tutorial, we will show how LIME can be applied to investigate the deep learning model behavior. We will show that despite the model achieving good accuracy on a validation set it actually doesn't work. Such behavior is caused by a biased dataset and may cause real harm when the model is used for real-world applications. It may be especially dangerous in the case of medical imagining where it is nearly impossible for a non-medical professional to say whether or not the analyzed dataset of x-ray images is somehow biased.</p>
@@ -900,11 +909,14 @@ Wrong preds: [6, 7, 10]
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p><div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_preprocess_transform</span><span class="p">():</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-hide</span>
+<span class="k">def</span> <span class="nf">get_preprocess_transform</span><span class="p">():</span>
     <span class="s2">&quot;https://github.com/marcotcr/lime/blob/master/doc/notebooks/Tutorial%20-</span><span class="si">%20i</span><span class="s2">mages%20-%20Pytorch.ipynb&quot;</span>
     <span class="n">normalize</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">],</span>
                                     <span class="n">std</span><span class="o">=</span><span class="p">[</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">])</span>     
@@ -921,18 +933,22 @@ Wrong preds: [6, 7, 10]
     </div>
 </div>
 </div>
-
+</p>
+    </details>
 </div>
     
 
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p><div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">batch_predict</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-hide</span>
+<span class="k">def</span> <span class="nf">batch_predict</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
     <span class="n">batch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">preprocess_transform</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">images</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
@@ -947,7 +963,8 @@ Wrong preds: [6, 7, 10]
     </div>
 </div>
 </div>
-
+</p>
+    </details>
 </div>
     
 
