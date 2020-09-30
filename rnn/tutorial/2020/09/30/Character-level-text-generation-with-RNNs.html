@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Characterv level text generation with RNNs using PyTorch Lightning | Data-science-blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Characterv level text generation with RNNs using PyTorch Lightning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple blog at which I descibe the data-science related topics" />
+<meta property="og:description" content="A simple blog at which I descibe the data-science related topics" />
+<link rel="canonical" href="https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html" />
+<meta property="og:url" content="https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html" />
+<meta property="og:site_name" content="Data-science-blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"A simple blog at which I descibe the data-science related topics","@type":"BlogPosting","headline":"Characterv level text generation with RNNs using PyTorch Lightning","url":"https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html","datePublished":"2020-09-30T00:00:00-05:00","dateModified":"2020-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-science-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://tugot17.github.io/data-science-blog/feed.xml" title="Data-science-blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-174564374-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/data-science-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Characterv level text generation with RNNs using PyTorch Lightning | Data-science-blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Characterv level text generation with RNNs using PyTorch Lightning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple blog at which I descibe the data-science related topics" />
+<meta property="og:description" content="A simple blog at which I descibe the data-science related topics" />
+<link rel="canonical" href="https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html" />
+<meta property="og:url" content="https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html" />
+<meta property="og:site_name" content="Data-science-blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"A simple blog at which I descibe the data-science related topics","@type":"BlogPosting","headline":"Characterv level text generation with RNNs using PyTorch Lightning","url":"https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html","datePublished":"2020-09-30T00:00:00-05:00","dateModified":"2020-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tugot17.github.io/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://tugot17.github.io/data-science-blog/feed.xml" title="Data-science-blog" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create','UA-174564374-1','auto');ga('require','displayfeatures');ga('send','pageview');</script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-science-blog/">Data-science-blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-science-blog/about/">About Me</a><a class="page-link" href="/data-science-blog/search/">Search</a><a class="page-link" href="/data-science-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Characterv level text generation with RNNs using PyTorch Lightning</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-09-30T00:00:00-05:00" itemprop="datePublished">
+        Sep 30, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-science-blog/categories/#RNN">RNN</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-science-blog/categories/#tutorial">tutorial</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/tugot17/data-science-blog/tree/master/_notebooks/2020-09-30-Character-level-text-generation-with-RNNs.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-science-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/tugot17/data-science-blog/master?filepath=_notebooks%2F2020-09-30-Character-level-text-generation-with-RNNs.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science-blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/tugot17/data-science-blog/blob/master/_notebooks/2020-09-30-Character-level-text-generation-with-RNNs.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/data-science-blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#!pip-install-pytorch-lightning==0.9.1rc3">!pip install pytorch-lightning==0.9.1rc3 </a></li>
+<li class="toc-entry toc-h1"><a href="#!pip-install-pytorch-lightning==0.9.1rc3">!pip install pytorch-lightning==0.9.1rc3 </a></li>
+<li class="toc-entry toc-h1"><a href="#Imports">Imports </a></li>
+<li class="toc-entry toc-h1"><a href="#Dataset">Dataset </a></li>
+<li class="toc-entry toc-h1"><a href="#String-to-int-and-int-to-string-mappers">String to int and int to string mappers </a></li>
+<li class="toc-entry toc-h1"><a href="#Dataset">Dataset </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Dataoader">Dataoader </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Lightning-Datamodule">Lightning Datamodule </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#RNN-Lightning">RNN Lightning </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Train-the-model">Train the model </a></li>
+<li class="toc-entry toc-h1"><a href="#Generate-names-using-the-trained-model">Generate names using the trained model </a></li>
+<li class="toc-entry toc-h1"><a href="#Summary">Summary </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-09-30-Character-level-text-generation-with-RNNs.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this article, we will show how to generate the text using Recurrent Neural Networks. We will use it to generate surnames of people and while doing so we will take into account the country they come from.</p>
+<p>As a recurrent network, we will use LSTM. For the training, we will use PyTorch Lightning. We will show how to use the <code>collate_fn</code> so we can have batches of sequences of the different lengths.</p>
+<p>The article was inspired by <a href="https://pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html">https://pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html</a>, the data used for the training was also taken from there</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="!pip-install-pytorch-lightning==0.9.1rc3">
+<a class="anchor" href="#!pip-install-pytorch-lightning==0.9.1rc3" aria-hidden="true"><span class="octicon octicon-link"></span></a>!pip install pytorch-lightning==0.9.1rc3<a class="anchor-link" href="#!pip-install-pytorch-lightning==0.9.1rc3"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="!pip-install-pytorch-lightning==0.9.1rc3">
+<a class="anchor" href="#!pip-install-pytorch-lightning==0.9.1rc3" aria-hidden="true"><span class="octicon octicon-link"></span></a>!pip install pytorch-lightning==0.9.1rc3<a class="anchor-link" href="#!pip-install-pytorch-lightning==0.9.1rc3"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># !pip install pytorch-lightning==0.9.1rc3</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Imports">
+<a class="anchor" href="#Imports" aria-hidden="true"><span class="octicon octicon-link"></span></a>Imports<a class="anchor-link" href="#Imports"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">torch.optim</span> <span class="kn">import</span> <span class="n">lr_scheduler</span><span class="p">,</span> <span class="n">Adam</span>
+
+<span class="kn">import</span> <span class="nn">pytorch_lightning</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning</span> <span class="kn">import</span> <span class="n">Trainer</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning.callbacks</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning.loggers</span> <span class="kn">import</span> <span class="n">TensorBoardLogger</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">string</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Dataset">
+<a class="anchor" href="#Dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dataset<a class="anchor-link" href="#Dataset"> </a>
+</h1>
+<p>The Dataset consists of 20072 examples of surnames from different countries, data can be found <a href="https://">here</a></p>
+<p>We will use those examples to generate new names using LSTM</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"text_generation/names.csv"</span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Category</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>English</td>
+      <td>Abbas</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>English</td>
+      <td>Abbey</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>English</td>
+      <td>Abbott</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>English</td>
+      <td>Abdi</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>English</td>
+      <td>Abel</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>20069</th>
+      <td>Russian</td>
+      <td>Zolotnitsky</td>
+    </tr>
+    <tr>
+      <th>20070</th>
+      <td>Russian</td>
+      <td>Zolotnitzky</td>
+    </tr>
+    <tr>
+      <th>20071</th>
+      <td>Russian</td>
+      <td>Zozrov</td>
+    </tr>
+    <tr>
+      <th>20072</th>
+      <td>Russian</td>
+      <td>Zozulya</td>
+    </tr>
+    <tr>
+      <th>20073</th>
+      <td>Russian</td>
+      <td>Zukerman</td>
+    </tr>
+  </tbody>
+</table>
+<p>20074 rows × 2 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'Category'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Russian       9408
+English       3668
+Arabic        2000
+Japanese       991
+German         724
+Italian        709
+Czech          519
+Spanish        298
+Dutch          297
+French         277
+Chinese        268
+Irish          232
+Greek          203
+Polish         139
+Scottish       100
+Korean          94
+Portuguese      74
+Vietnamese      73
+Name: Category, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="String-to-int-and-int-to-string-mappers">
+<a class="anchor" href="#String-to-int-and-int-to-string-mappers" aria-hidden="true"><span class="octicon octicon-link"></span></a>String to int and int to string mappers<a class="anchor-link" href="#String-to-int-and-int-to-string-mappers"> </a>
+</h1>
+<p>We will treat each letter as a separate element of a sequence. Thanks to that we don't need to perform any sophisticated tokenization, whatsoever.</p>
+<p>Besides letters, we will add tho additional tokens <code>&lt;pad&gt;</code> and <code>&lt;eos&gt;</code>. The fist is needed for padding (we will pad the names with 0 so we can have sequences of the same size in the single batch) while the second will be used to "announce" to the model that the name generation process ended.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_letters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;pad&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="s2">" .,;'-"</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;eos&gt;"</span><span class="p">]</span>
+<span class="n">n_letters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_letters</span><span class="p">)</span>
+<span class="n">n_letters</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>60</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stoi</span> <span class="o">=</span> <span class="p">{</span><span class="n">letter</span> <span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">letter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_letters</span><span class="p">)}</span>
+<span class="n">itos</span> <span class="o">=</span> <span class="p">[</span><span class="n">letter</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">letter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_letters</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stoi</span><span class="p">[</span><span class="s2">"&lt;eos&gt;"</span><span class="p">],</span> <span class="n">itos</span><span class="p">[</span><span class="mi">59</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(59, '&lt;eos&gt;')</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">stoi</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>60</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Dataset">
+<a class="anchor" href="#Dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dataset<a class="anchor-link" href="#Dataset"> </a>
+</h1>
+<p>To provide the data to the model we need a <code>Dataset</code>. The one defined by us will return a dictionary of five elements.</p>
+<p>The three most important are:</p>
+<p><code>category_tensor</code> - one-hot representation of one of the 18 categories.</p>
+<p>E.g English is represented as [[0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0.]]</p>
+<p><code>input_tensor</code> int representation of letter tokens from the name.</p>
+<p><code>target_tensor</code> int representation of letter tokens from the target name. Target differs from input in such a way that it skips the first letter and adds <code>&lt;eos&gt;</code> at the end.</p>
+<p>We use 0 for <code>&lt;pad&gt;</code> token and 59 for <code>&lt;eos&gt;</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">NamesDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">stoi</span><span class="p">,</span> <span class="n">eos_token</span><span class="o">=</span><span class="s2">"&lt;eos&gt;"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stoi</span> <span class="o">=</span> <span class="n">stoi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eos_token</span> <span class="o">=</span> <span class="n">eos_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_tokens</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stoi</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">categories</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"Category"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"Name"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_categories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_categories</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_categories</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+        
+        <span class="n">category_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_category_tensor</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+        
+        <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">stoi</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">name</span><span class="p">])</span>
+        <span class="n">target_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">stoi</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">+</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eos_token</span><span class="p">]])</span>
+        
+        <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"category"</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+        <span class="s2">"category_tensor"</span><span class="p">:</span> <span class="n">category_tensor</span><span class="p">,</span>
+        <span class="s2">"input_tensor"</span><span class="p">:</span> <span class="n">input_tensor</span><span class="p">,</span>
+        <span class="s2">"target_tensor"</span><span class="p">:</span> <span class="n">target_tensor</span><span class="p">}</span>
+        
+        
+        <span class="k">return</span> <span class="n">item_dict</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">get_category_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+        <span class="n">li</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_categories</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_categories</span><span class="p">)</span>
+        <span class="n">tensor</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">li</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">tensor</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">NamesDataset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">stoi</span><span class="p">)</span>
+
+<span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'category': 'English',
+ 'category_tensor': tensor([[0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]]),
+ 'input_tensor': tensor([27,  2,  2,  1, 19]),
+ 'name': 'Abbas',
+ 'target_tensor': tensor([ 2,  2,  1, 19, 59])}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Dataoader">
+<a class="anchor" href="#Dataoader" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dataoader<a class="anchor-link" href="#Dataoader"> </a>
+</h2>
+<p>The Dataset returns sequences of a different length, which might cause problems, due to that we need to define the <code>collate_fn</code> method which will handle this issue. It will add padding (0) to at the end of the sequences that are shorter than the longest sentence in a batch. Thanks to that we can work with batches of size other than one</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">collate_fn</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+        <span class="s2">"https://github.com/yunjey/seq2seq-dataloader/blob/master/data_loader.py"</span>
+        
+        <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+        <span class="n">padded_seqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lengths</span><span class="p">))</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">padded_seqs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">padded_seqs</span><span class="p">,</span> <span class="n">lengths</span>
+
+    <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>          
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>          
+    <span class="n">category_tensors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">"category_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+    
+    <span class="n">input_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"input_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="n">input_tensors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">input_tensors</span><span class="p">)</span>
+    
+    <span class="n">target_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"target_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="n">target_tensors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">target_tensors</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">categories</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">category_tensors</span><span class="p">,</span> <span class="n">input_tensors</span><span class="p">,</span> <span class="n">target_tensors</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dl</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dl</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(['Czech'],
+ ['Lawa'],
+ tensor([[1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]]),
+ tensor([[38,  1, 23,  1]]),
+ tensor([[ 1, 23,  1, 59]]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Lightning-Datamodule">
+<a class="anchor" href="#Lightning-Datamodule" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lightning Datamodule<a class="anchor-link" href="#Lightning-Datamodule"> </a>
+</h1>
+<p>To pass everything into the Lightning training loop we combine all of the previous steps and we define a <code>LightningDataModule</code> object</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">NamesDatamodule</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningDataModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"text_generation/names.csv"</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_letters</span> <span class="o">=</span> <span class="n">all_letters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"&lt;pad&gt;"</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="s2">" .,;'-"</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"&lt;eos&gt;"</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stoi</span> <span class="o">=</span> <span class="p">{</span><span class="n">letter</span> <span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">letter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_letters</span><span class="p">)}</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_set</span> <span class="o">=</span> <span class="n">NamesDataset</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stoi</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">train_dataloader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DataLoader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collate_fn</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">collate_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+            <span class="s2">"https://github.com/yunjey/seq2seq-dataloader/blob/master/data_loader.py"</span>
+
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+            <span class="n">padded_seqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lengths</span><span class="p">))</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">padded_seqs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">padded_seqs</span><span class="p">,</span> <span class="n">lengths</span>
+
+        <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"category"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>          
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>          
+        <span class="n">category_tensors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="s2">"category_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+        <span class="n">input_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"input_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">input_tensors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">input_tensors</span><span class="p">)</span>
+
+        <span class="n">target_tensors</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s2">"target_tensor"</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">target_tensors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">target_tensors</span><span class="p">)</span>
+        
+        <span class="n">item_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"categories"</span><span class="p">:</span> <span class="n">categories</span><span class="p">,</span> 
+                     <span class="s2">"names"</span><span class="p">:</span> <span class="n">names</span><span class="p">,</span> 
+                     <span class="s2">"category_tensors"</span><span class="p">:</span> <span class="n">category_tensors</span><span class="p">,</span>
+                     <span class="s2">"input_tensors"</span><span class="p">:</span> <span class="n">input_tensors</span><span class="p">,</span>
+                     <span class="s2">"target_tensors"</span><span class="p">:</span> <span class="n">target_tensors</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">item_dict</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="RNN-Lightning">
+<a class="anchor" href="#RNN-Lightning" aria-hidden="true"><span class="octicon octicon-link"></span></a>RNN Lightning<a class="anchor-link" href="#RNN-Lightning"> </a>
+</h2>
+<p>We define a RNN. As a loss function, we will use <code>CrossEntropyLoss</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">RNN</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="mf">5e-4</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">embeding_size</span><span class="p">,</span> <span class="n">n_categories</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">n_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">embeding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">input_size</span><span class="o">+</span><span class="n">n_categories</span><span class="p">,</span> <span class="n">embeding_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">embeding_size</span><span class="o">+</span><span class="n">n_categories</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_of_category</span><span class="p">,</span> <span class="n">batch_of_letter</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+        <span class="c1">## letter level operations</span>
+        
+        <span class="n">embeding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">embeding</span><span class="p">(</span><span class="n">batch_of_letter</span><span class="p">))</span>
+        <span class="n">category_plus_letter</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">batch_of_category</span><span class="p">,</span> <span class="n">embeding</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">#sequence_length = 1</span>
+        <span class="n">category_plus_letter</span> <span class="o">=</span> <span class="n">category_plus_letter</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">out</span><span class="p">,</span> <span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">category_plus_letter</span><span class="p">,</span> <span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_fc</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+        
+
+    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+        <span class="n">scheduler</span> <span class="o">=</span> <span class="n">lr_scheduler</span><span class="o">.</span><span class="n">StepLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">optimizer</span><span class="p">],</span> <span class="p">[</span><span class="n">scheduler</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">item_dict</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">batch_of_category</span> <span class="o">=</span> <span class="n">item_dict</span><span class="p">[</span><span class="s2">"category_tensors"</span><span class="p">]</span>
+
+        <span class="c1">#to(device) needed due to some problem with PL</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1">#we loop over letters, single batch at the time </span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">item_dict</span><span class="p">[</span><span class="s2">"input_tensors"</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="n">batch_of_letter</span> <span class="o">=</span> <span class="n">item_dict</span><span class="p">[</span><span class="s2">"input_tensors"</span><span class="p">][:,</span> <span class="n">t</span><span class="p">]</span>
+            
+            <span class="n">output</span><span class="p">,</span> <span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch_of_category</span><span class="p">,</span> <span class="n">batch_of_letter</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            
+            <span class="n">loss</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">item_dict</span><span class="p">[</span><span class="s2">"target_tensors"</span><span class="p">][:,</span> <span class="n">t</span><span class="p">])</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">/</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'train_loss'</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'loss'</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">:</span> <span class="n">tensorboard_logs</span><span class="p">}</span>
+    
+    
+    <span class="k">def</span> <span class="nf">init_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Train-the-model">
+<a class="anchor" href="#Train-the-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Train the model<a class="anchor-link" href="#Train-the-model"> </a>
+</h1>
+<p>Finally, after defining the model and datamodule we can start training. For some strange reason that is not entirely clear to us, the model performs best when it is trained on a batch of size 1. After only 2 or 3 epochs it should be capable of generating the names</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">NamesDatamodule</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">rnn_model</span> <span class="o">=</span> <span class="n">RNN</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">n_tokens</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+            <span class="n">embeding_size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> 
+            <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>    
+            <span class="n">n_categories</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">n_categories</span><span class="p">,</span>
+            <span class="n">output_size</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">n_tokens</span><span class="p">,</span>
+            <span class="n">p</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> 
+                  <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">early_stop_callback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">checkpoint_callback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="p">)</span>
+
+<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">rnn_model</span><span class="p">,</span> <span class="n">dm</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | criterion | CrossEntropyLoss | 0     
+1 | embeding  | Embedding        | 9 K   
+2 | lstm      | LSTM             | 940 K 
+3 | out_fc    | Linear           | 15 K  
+4 | dropout   | Dropout          | 0     
+Saving latest checkpoint..
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Generate-names-using-the-trained-model">
+<a class="anchor" href="#Generate-names-using-the-trained-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generate names using the trained model<a class="anchor-link" href="#Generate-names-using-the-trained-model"> </a>
+</h1>
+<p>Finally, we can check how our model handles the generation of names. It works quite well we can see that Russian names "sound" Russian as well as Japanese names "sound" Japanese</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">max_length</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1"># Sample from a category and starting letter</span>
+<span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">start_letter</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>  <span class="c1"># no need to track history in sampling</span>
+        <span class="n">category_tensor</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">get_category_tensor</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+        
+        <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">stoi</span><span class="p">[</span><span class="n">start_letter</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">init_hidden</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">output_name</span> <span class="o">=</span> <span class="n">start_letter</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_length</span><span class="p">):</span>
+            <span class="n">output</span><span class="p">,</span> <span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">category_tensor</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="n">topv</span><span class="p">,</span> <span class="n">topi</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">topi</span> <span class="o">=</span> <span class="n">topi</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">topi</span> <span class="o">==</span> <span class="n">ds</span><span class="o">.</span><span class="n">stoi</span><span class="p">[</span><span class="s2">"&lt;eos&gt;"</span><span class="p">]:</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">letter</span> <span class="o">=</span> <span class="n">itos</span><span class="p">[</span><span class="n">topi</span><span class="p">]</span>
+                <span class="n">output_name</span> <span class="o">+=</span> <span class="n">letter</span>
+                
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">stoi</span><span class="p">[</span><span class="n">letter</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output_name</span>
+
+<span class="c1"># Get multiple samples from one category and multiple starting letters</span>
+<span class="k">def</span> <span class="nf">samples</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">start_letters</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">start_letter</span> <span class="ow">in</span> <span class="n">start_letters</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sample</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">start_letter</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">samples</span><span class="p">(</span><span class="s1">'English'</span><span class="p">,</span> <span class="s1">'ABC'</span><span class="p">,</span> <span class="n">rnn_model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="n">samples</span><span class="p">(</span><span class="s1">'Russian'</span><span class="p">,</span> <span class="s1">'ABC'</span><span class="p">,</span> <span class="n">rnn_model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="n">samples</span><span class="p">(</span><span class="s1">'Japanese'</span><span class="p">,</span> <span class="s1">'ABC'</span><span class="p">,</span> <span class="n">rnn_model</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Allan
+Bowe
+Corris
+
+Abrakoff
+Babakov
+Cheparov
+
+Abata
+Bakata
+Chigawa
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary<a class="anchor-link" href="#Summary"> </a>
+</h1>
+<p>We showed how to define a LTSM network to generate text, our model works on a character level. We also showed how to define a dataloader for sequences of different lengths using <code>collate_fn</code>.</p>
+<p>Of course, the proposed network is very simple, but the goal of this article is to familiarize both author and the reader with the concept of Recurrent Neural Networks</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"0f352de22b2f491fa7e62102069fae79": {"model_module": "@jupyter-widgets/controls", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_8639ca68674d467a9da3ca9ff82a2912", "IPY_MODEL_d696800ddb344317b02fe53cd934cbe9"], "layout": "IPY_MODEL_cce593d10cfc4f9d88b196b292de24ee"}}, "6c5fb200659b47e0af65381dc56c356a": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": "2", "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7c68d3cdacc747b6bbc9595b8ee37f92": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8639ca68674d467a9da3ca9ff82a2912": {"model_module": "@jupyter-widgets/controls", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "Epoch 2: 100%", "description_tooltip": null, "layout": "IPY_MODEL_6c5fb200659b47e0af65381dc56c356a", "max": 20074, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_e115d99adf8b46feb336c104fd95acda", "value": 20074}}, "91e9b9eac8684ebcacc1f0309cc5e67c": {"model_module": "@jupyter-widgets/controls", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "cce593d10cfc4f9d88b196b292de24ee": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": "inline-flex", "flex": null, "flex_flow": "row wrap", "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": "100%"}}, "d696800ddb344317b02fe53cd934cbe9": {"model_module": "@jupyter-widgets/controls", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_7c68d3cdacc747b6bbc9595b8ee37f92", "placeholder": "\u200b", "style": "IPY_MODEL_91e9b9eac8684ebcacc1f0309cc5e67c", "value": " 20074/20074 [05:33&lt;00:00, 60.22it/s, loss=1.589]"}}, "e115d99adf8b46feb336c104fd95acda": {"model_module": "@jupyter-widgets/controls", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": "initial"}}}
+</script>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="tugot17/data-science-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-science-blog/rnn/tutorial/2020/09/30/Character-level-text-generation-with-RNNs.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-science-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-science-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-science-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A simple blog at which I descibe the data-science related topics</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/tugot17" title="tugot17"><svg class="svg-icon grey"><use xlink:href="/data-science-blog/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
