@@ -1,0 +1,702 @@
+[
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "",
+    "text": "Image augmentation is a machine learning technique that “boomed” in recent years along with the large deep learning systems. In this article, we present a visualization of pixel level augmentation techniques available in the albumentations.\nThe provided descriptions mostly come the official project documentation available at https://albumentations.ai/\nLinks to the official documentation below:"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#image-that-will-be-transformed",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#image-that-will-be-transformed",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Image that will be transformed",
+    "text": "Image that will be transformed\n\nfrom os.path import join\nfrom PIL import Image\nimport numpy as np\n\n\npath = join(\"lime_image\", \"husky_test\", \"5.JPG\")\n\nimg = Image.open(path)\nimg = img.resize((384, 384))\nimg\n\n\n\n\n\nimage = np.asarray(img)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#blur",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#blur",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Blur",
+    "text": "Blur\nBlur the input image using a random-sized kernel.\n\nfrom albumentations.augmentations.transforms import Blur\n\nblur_limit=10\n\ntransform = Blur(blur_limit, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#clahe",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#clahe",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "CLAHE",
+    "text": "CLAHE\nApply Contrast Limited Adaptive Histogram Equalization to the input image.\n\nfrom albumentations.augmentations.transforms import CLAHE\n\nclip_limit=6.0\ntile_grid_size=(10, 10)\n\ntransform = CLAHE(clip_limit, tile_grid_size, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#channeldropout",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#channeldropout",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ChannelDropout",
+    "text": "ChannelDropout\nRandomly Drop Channels in the input Image.\n\nfrom albumentations.augmentations.transforms import ChannelDropout\n\nchannel_drop_range=(1, 2)\n\nfill_value=0\n\ntransform = ChannelDropout(channel_drop_range, fill_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#channelshuffle",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#channelshuffle",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ChannelShuffle",
+    "text": "ChannelShuffle\nRandomly rearrange channels of the input RGB image.\n\nfrom albumentations.augmentations.transforms import ChannelShuffle\n\ntransform = ChannelShuffle(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#downscale",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#downscale",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Downscale",
+    "text": "Downscale\nDecreases image quality by downscaling and upscaling back.\n\nfrom albumentations.augmentations.transforms import Downscale\n\nscale_min=0.25\nscale_max=0.25\ninterpolation=0\n\ntransform = Downscale(scale_min, scale_max, interpolation=0, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#equalize",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#equalize",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Equalize",
+    "text": "Equalize\nEqualize the image histogram.\n\nfrom albumentations.augmentations.transforms import Equalize\n\nmode='pil'\nby_channels=True\nmask=None\nmask_params=()\n\ntransform = Equalize(mode, by_channels, mask, mask_params, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#fancypca",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#fancypca",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "FancyPCA",
+    "text": "FancyPCA\nAugment RGB image using FancyPCA from Krizhevsky’s paper “ImageNet Classification with Deep Convolutional Neural Networks”\nalpha = how much to perturb/scale the eigen vecs and vals. scale is samples from gaussian distribution (mu=0, sigma=alpha)\n\nfrom albumentations.augmentations.transforms import FancyPCA\n\nalpha=1.0\n\ntransform = FancyPCA(alpha, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#gaussnoise",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#gaussnoise",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "GaussNoise",
+    "text": "GaussNoise\nApply gaussian noise to the input image.\n\nfrom albumentations.augmentations.transforms import GaussNoise\n\nvar_limit=(10.0, 50.0)\nmean=-50\n\ntransform = GaussNoise(var_limit, mean, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#gaussianblur",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#gaussianblur",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "GaussianBlur",
+    "text": "GaussianBlur\nBlur the input image using using a Gaussian filter with a random kernel size.\n\nfrom albumentations.augmentations.transforms import GaussianBlur\n\nblur_limit=(3, 7)\nsigma_limit=0\n\ntransform = GaussianBlur(blur_limit, sigma_limit, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#glassblur",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#glassblur",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "GlassBlur",
+    "text": "GlassBlur\nApply glass noise to the input image.\n\nfrom albumentations.augmentations.transforms import GlassBlur\n\nsigma=0.1\nmax_delta=1\niterations=5\n\ntransform = GlassBlur(sigma, max_delta, iterations, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#huesaturationvalue",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#huesaturationvalue",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "HueSaturationValue",
+    "text": "HueSaturationValue\nRandomly change hue, saturation and value of the input image.\n\nfrom albumentations.augmentations.transforms import HueSaturationValue\n\nhue_shift_limit=50\nsat_shift_limit=50\nval_shift_limit=20\n\ntransform = HueSaturationValue(hue_shift_limit, sat_shift_limit, val_shift_limit,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaaadditivegaussiannoise",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaaadditivegaussiannoise",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "IAAAdditiveGaussianNoise",
+    "text": "IAAAdditiveGaussianNoise\nAdd gaussian noise to the input image.\n\nfrom albumentations.imgaug.transforms import IAAAdditiveGaussianNoise\n\nloc=0\nscale=(0.1, 20)\nper_channel=False\n\ntransform = IAAAdditiveGaussianNoise(loc, scale, per_channel, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaaemboss",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaaemboss",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "IAAEmboss",
+    "text": "IAAEmboss\nEmboss the input image and overlays the result with the original image.\n\nfrom albumentations.imgaug.transforms import IAAEmboss\n\nalpha=(0.2, 1.0)\n\nstrength=(0.2, 0.7)\n\ntransform = IAAEmboss(alpha, strength, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaasharpen",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaasharpen",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "IAASharpen",
+    "text": "IAASharpen\nSharpen the input image and overlays the result with the original image.\n\nfrom albumentations.imgaug.transforms import IAASharpen\n\nalpha=(0.2, 0.5)\nlightness=(0.5, 1.0)\n\ntransform = IAASharpen(alpha, lightness, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaasuperpixels",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#iaasuperpixels",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "IAASuperpixels",
+    "text": "IAASuperpixels\nCompletely or partially transform the input image to its superpixel representation. Uses skimage’s version of the SLIC algorithm. May be slow.\n\nfrom albumentations.imgaug.transforms import IAASuperpixels\n\np_replace=0.5\nn_segments=10\n\ntransform = IAASuperpixels(p_replace, n_segments, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#isonoise",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#isonoise",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ISONoise",
+    "text": "ISONoise\nApply camera sensor noise.\n\nfrom albumentations.augmentations.transforms import ISONoise\n\ncolor_shift=(0.01, 0.05)\nintensity=(0.1, 0.5)\n\ntransform = ISONoise(color_shift, intensity, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#imagecompression",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#imagecompression",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ImageCompression",
+    "text": "ImageCompression\nDecrease Jpeg, WebP compression of an image.\n\nfrom albumentations.augmentations.transforms import ImageCompression\n\nquality_lower=1\nquality_upper=10\n\ntransform = ImageCompression(quality_lower, quality_upper, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#invertimg",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#invertimg",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "InvertImg",
+    "text": "InvertImg\nInvert the input image by subtracting pixel values from 255.\n\nfrom albumentations.augmentations.transforms import InvertImg\n\ntransform = InvertImg(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#medianblur",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#medianblur",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "MedianBlur",
+    "text": "MedianBlur\nBlur the input image using using a median filter with a random aperture linear size.\n\nfrom albumentations.augmentations.transforms import MedianBlur\n\nblur_limit=5\n\ntransform = MedianBlur(blur_limit,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#motionblur",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#motionblur",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "MotionBlur",
+    "text": "MotionBlur\nApply motion blur to the input image using a random-sized kernel.\n\nfrom albumentations.augmentations.transforms import MotionBlur\n\nblur_limit = 31\n\ntransform = MotionBlur(blur_limit,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#multiplicativenoise",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#multiplicativenoise",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "MultiplicativeNoise",
+    "text": "MultiplicativeNoise\nMultiply image to random number or array of numbers.\n\nfrom albumentations.augmentations.transforms import MultiplicativeNoise\n\nmultiplier=(0.9, 1.1)\nper_channel=True\nelementwise=False\n\ntransform = MultiplicativeNoise(multiplier, per_channel, elementwise,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#normalize",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#normalize",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Normalize",
+    "text": "Normalize\nDivide pixel values by 255 = 2**8 - 1, subtract mean per channel and divide by std per channel.\n\nfrom albumentations.augmentations.transforms import Normalize\n\nmean=(0.485, 0.456, 0.406)\nstd=(0.229, 0.224, 0.225)\n\ntransform = Normalize(mean, std,  p=1.0)\n\naugmented_image = transform(image=image)['image']\n\naugmented_image\n\narray([[[ 0.05693975,  1.1155462 ,  2.2391286 ],\n        [ 0.039815  ,  1.0980392 ,  2.2216992 ],\n        [ 0.07406451,  1.1330532 ,  2.2565577 ],\n        ...,\n        [ 0.12543876,  1.2380952 ,  2.3437037 ],\n        [ 0.15968828,  1.2731092 ,  2.378562  ],\n        [ 0.14256352,  1.2556022 ,  2.3611329 ]],\n\n       [[ 0.07406451,  1.1155462 ,  2.2042701 ],\n        [ 0.05693975,  1.1155462 ,  2.2216992 ],\n        [ 0.07406451,  1.1330532 ,  2.2565577 ],\n        ...,\n        [ 0.12543876,  1.2380952 ,  2.3437037 ],\n        [ 0.17681302,  1.2906162 ,  2.3959913 ],\n        [ 0.15968828,  1.2731092 ,  2.378562  ]],\n\n       [[ 0.09118926,  1.1330532 ,  2.2216992 ],\n        [ 0.07406451,  1.1155462 ,  2.2042701 ],\n        [ 0.07406451,  1.0980392 ,  2.2391286 ],\n        ...,\n        [ 0.12543876,  1.2380952 ,  2.3437037 ],\n        [ 0.17681302,  1.2906162 ,  2.3959913 ],\n        [ 0.15968828,  1.2731092 ,  2.378562  ]],\n\n       ...,\n\n       [[-1.3301653 , -0.687675  , -1.6998693 ],\n        [-0.30268008,  0.46778712, -1.6301525 ],\n        [ 0.02269025,  0.6253501 , -0.8109804 ],\n        ...,\n        [-1.3644148 , -0.635154  , -1.0898474 ],\n        [-1.8096584 , -1.1428571 , -1.2118518 ],\n        [-2.0665298 , -1.4404761 , -1.3338561 ]],\n\n       [[ 0.4508091 ,  1.0805322 , -0.8981263 ],\n        [ 0.67343086,  1.5707282 , -0.4449673 ],\n        [ 1.4782943 ,  2.1659663 , -0.30553374],\n        ...,\n        [-1.1075435 , -0.42507   , -0.8981263 ],\n        [-1.9124069 , -1.265406  , -1.2989978 ],\n        [-2.117904  , -1.6330531 , -1.5081481 ]],\n\n       [[ 0.24531204,  0.83543414, -0.23581697],\n        [ 0.7419299 ,  1.6407562 , -0.46239647],\n        [ 1.084425  ,  1.6407562 , -0.88069713],\n        ...,\n        [-0.88492167, -0.10994395, -0.70640516],\n        [-1.5870366 , -0.827731  , -0.9329847 ],\n        [-1.8610326 , -1.212885  , -1.1944226 ]]], dtype=float32)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#posterize",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#posterize",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Posterize",
+    "text": "Posterize\nReduce the number of bits for each color channel.\n\nfrom albumentations.augmentations.transforms import Posterize\n\nnum_bits=3\n\ntransform = Posterize(num_bits,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#rgbshift",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#rgbshift",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RGBShift",
+    "text": "RGBShift\nRandomly shift values for each channel of the input RGB image.\n\nfrom albumentations.augmentations.transforms import RGBShift\n\nr_shift_limit=50\ng_shift_limit=50\nb_shift_limit=50\n\ntransform = RGBShift(r_shift_limit, g_shift_limit, b_shift_limit,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randombrightnesscontrast",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randombrightnesscontrast",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomBrightnessContrast",
+    "text": "RandomBrightnessContrast\nRandomly change brightness and contrast of the input image.\n\nfrom albumentations.augmentations.transforms import RandomBrightnessContrast\n\nbrightness_limit=0.5\ncontrast_limit=0.2\nbrightness_by_max=True\n\ntransform = RandomBrightnessContrast(brightness_limit, contrast_limit, brightness_by_max,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomfog",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomfog",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomFog",
+    "text": "RandomFog\nSimulates fog for the image\n\nfrom albumentations.augmentations.transforms import RandomFog\n\nfog_coef_lower=0.3\nfog_coef_upper=0.5\nalpha_coef=0.08\n\ntransform = RandomFog(fog_coef_lower, fog_coef_upper, alpha_coef,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomgamma",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomgamma",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomGamma",
+    "text": "RandomGamma\nNo description\n\nfrom albumentations.augmentations.transforms import RandomGamma\n\ngamma_limit=(80, 200)\n\ntransform = RandomGamma (gamma_limit,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomrain",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomrain",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomRain",
+    "text": "RandomRain\nAdds rain effects\n\nfrom albumentations.augmentations.transforms import RandomRain\n\nslant_lower=-1\nslant_upper=1\ndrop_length=20\ndrop_width=1\ndrop_color=(50, 50, 50)\nblur_value=4\nbrightness_coefficient=0.7\nrain_type=\"drizzle\"\n\ntransform = RandomRain (slant_lower, slant_upper, drop_length, drop_width,\n                        drop_color, blur_value, brightness_coefficient, rain_type,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomshadow",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomshadow",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomShadow",
+    "text": "RandomShadow\n\nfrom albumentations.augmentations.transforms import RandomShadow\n\nshadow_roi=(0, 0.5, 1, 1)\nnum_shadows_lower=5\nnum_shadows_upper=5\nshadow_dimension=5\n\ntransform = RandomShadow(shadow_roi, num_shadows_lower, num_shadows_upper, shadow_dimension,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomsnow",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomsnow",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomSnow",
+    "text": "RandomSnow\nBleach out some pixel values simulating snow.\n\nfrom albumentations.augmentations.transforms import RandomSnow\n\nsnow_point_lower=0.1\nsnow_point_upper=0.2\nbrightness_coeff=2.5\n\ntransform = RandomSnow(snow_point_lower, snow_point_upper, brightness_coeff,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomsunflare",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#randomsunflare",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "RandomSunFlare",
+    "text": "RandomSunFlare\nSimulates Sun Flare for the image\n\nfrom albumentations.augmentations.transforms import RandomSunFlare\n\nflare_roi=(0, 0, 1, 0.5)\nangle_lower=0\nangle_upper=1\nnum_flare_circles_lower=6\nnum_flare_circles_upper=10\nsrc_radius=200\nsrc_color=(255, 255, 255)\n\ntransform = RandomSunFlare(flare_roi, angle_lower, angle_upper, num_flare_circles_lower,\n                           num_flare_circles_upper, src_radius, src_color,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#solarize",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#solarize",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "Solarize",
+    "text": "Solarize\nInvert all pixel values above a threshold.\n\nfrom albumentations.augmentations.transforms import Solarize\n\ntransform = Solarize(threshold=200,  p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#tofloat",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#tofloat",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ToFloat",
+    "text": "ToFloat\nDivide pixel values by max_value to get a float32 output array where all values lie in the range [0, 1.0]. If max_value is None the transform will try to infer the maximum value by inspecting the data type of the input image.\n\nfrom albumentations.augmentations.transforms import ToFloat\n\nmax_value = None\n\ntransform = ToFloat(max_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\naugmented_image\n\narray([[[0.49803922, 0.7058824 , 0.9098039 ],\n        [0.49411765, 0.7019608 , 0.90588236],\n        [0.5019608 , 0.70980394, 0.9137255 ],\n        ...,\n        [0.5137255 , 0.73333335, 0.93333334],\n        [0.52156866, 0.7411765 , 0.9411765 ],\n        [0.5176471 , 0.7372549 , 0.9372549 ]],\n\n       [[0.5019608 , 0.7058824 , 0.9019608 ],\n        [0.49803922, 0.7058824 , 0.90588236],\n        [0.5019608 , 0.70980394, 0.9137255 ],\n        ...,\n        [0.5137255 , 0.73333335, 0.93333334],\n        [0.5254902 , 0.74509805, 0.94509804],\n        [0.52156866, 0.7411765 , 0.9411765 ]],\n\n       [[0.5058824 , 0.70980394, 0.90588236],\n        [0.5019608 , 0.7058824 , 0.9019608 ],\n        [0.5019608 , 0.7019608 , 0.9098039 ],\n        ...,\n        [0.5137255 , 0.73333335, 0.93333334],\n        [0.5254902 , 0.74509805, 0.94509804],\n        [0.52156866, 0.7411765 , 0.9411765 ]],\n\n       ...,\n\n       [[0.18039216, 0.3019608 , 0.02352941],\n        [0.41568628, 0.56078434, 0.03921569],\n        [0.49019608, 0.59607846, 0.22352941],\n        ...,\n        [0.17254902, 0.3137255 , 0.16078432],\n        [0.07058824, 0.2       , 0.13333334],\n        [0.01176471, 0.13333334, 0.10588235]],\n\n       [[0.5882353 , 0.69803923, 0.20392157],\n        [0.6392157 , 0.80784315, 0.30588236],\n        [0.8235294 , 0.9411765 , 0.3372549 ],\n        ...,\n        [0.23137255, 0.36078432, 0.20392157],\n        [0.04705882, 0.17254902, 0.11372549],\n        [0.        , 0.09019608, 0.06666667]],\n\n       [[0.5411765 , 0.6431373 , 0.3529412 ],\n        [0.654902  , 0.8235294 , 0.3019608 ],\n        [0.73333335, 0.8235294 , 0.20784314],\n        ...,\n        [0.28235295, 0.43137255, 0.24705882],\n        [0.12156863, 0.27058825, 0.19607843],\n        [0.05882353, 0.18431373, 0.13725491]]], dtype=float32)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#togray",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#togray",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ToGray",
+    "text": "ToGray\nConvert the input RGB image to grayscale. If the mean pixel value for the resulting image is greater than 127, invert the resulting grayscale image.\n\nfrom albumentations.augmentations.transforms import ToGray\n\n\ntransform = ToGray(p=1.0)\n\naugmented_image = transform(image=image)['image']\n\nprint(augmented_image.shape)\nImage.fromarray(augmented_image)\n\n(384, 384, 3)"
+  },
+  {
+    "objectID": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#tosepia",
+    "href": "posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html#tosepia",
+    "title": "Overview and visualization of pixel-level transforms from albumentations package",
+    "section": "ToSepia",
+    "text": "ToSepia\nApplies sepia filter to the input RGB image\n\nfrom albumentations.augmentations.transforms import ToSepia\n\n\ntransform = ToSepia(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-10-27-twitter-scraping-at-scale.html",
+    "href": "posts/2020-10-27-twitter-scraping-at-scale.html",
+    "title": "Twitter scraping at scale - leverage multiprocessing to speed up the follower retrieval process",
+    "section": "",
+    "text": "In this tutorial, we will show how to use the python multiprocessing package to speed up the process of scraping data from Twitter. As a scrapper, we will use the twint package available here. Due to the often changes of twitter, we recommend to download the package directly from Github by running:\nWe will show how to handle a case where you need to run multiple processes concurrently, as an example we will show how to concurrently download the following lists for multiple accounts."
+  },
+  {
+    "objectID": "posts/2020-10-27-twitter-scraping-at-scale.html#example-following-list",
+    "href": "posts/2020-10-27-twitter-scraping-at-scale.html#example-following-list",
+    "title": "Twitter scraping at scale - leverage multiprocessing to speed up the follower retrieval process",
+    "section": "Example following list",
+    "text": "Example following list\n\npath = join(save_dir, f\"{df.username.iloc[0]}_followers.csv\")\n\npd.read_csv(path)\n\n\n\n\n\n  \n    \n      \n      username\n    \n  \n  \n    \n      0\n      jimgaffigan\n    \n    \n      1\n      kotsiebader\n    \n    \n      2\n      eshaenic\n    \n    \n      3\n      ladywardog\n    \n    \n      4\n      ruth_a_buzzi\n    \n    \n      ...\n      ...\n    \n    \n      572\n      archaeologynews\n    \n    \n      573\n      fernbankmuseum\n    \n    \n      574\n      carlosmuseum\n    \n    \n      575\n      britishmuseum\n    \n    \n      576\n      fieldmuseum\n    \n  \n\n577 rows × 1 columns"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "",
+    "text": "Image augmentation is a machine learning technique that “boomed” in recent years along with the large deep learning systems. In this article, we present a visualization of spatial-level augmentation techniques available in the albumentations.\nThe provided descriptions mostly come the official project documentation available at https://albumentations.ai/\nSome of the transformations can only be applied to images, others also to bboxes and keypoints, the below table (from https://github.com/albumentations-team/albumentations#spatial-level-transforms) describes it in detail"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#image-that-will-be-transformed",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#image-that-will-be-transformed",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Image that will be transformed",
+    "text": "Image that will be transformed\n\nfrom os.path import join\nfrom PIL import Image\nimport numpy as np\n\n\npath = join(\"lime_image\", \"husky_train\", \"47.jpg\")\n\nimg = Image.open(path)\nimg = img.resize((384, 384))\nimg\n\n\n\n\n\nimage = np.asarray(img)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#centercrop",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#centercrop",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "CenterCrop",
+    "text": "CenterCrop\nCrop the central part of the input.\n\nfrom albumentations.augmentations.transforms import CenterCrop\n\nheight, width = 200, 200\n\ntransform = CenterCrop(height, width, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#coarsedropout",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#coarsedropout",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "CoarseDropout",
+    "text": "CoarseDropout\nCoarseDropout of the rectangular regions in the image.\n\nfrom albumentations.augmentations.transforms import CoarseDropout\n\n\nmax_holes=10\nmax_height=50\nmax_width=8\nmin_holes=1\nmin_height=None\nmin_width=None\nfill_value=255\nmask_fill_value=None\n\ntransform =CoarseDropout(max_holes, max_height, max_width, min_holes, min_height, min_width,\n                         fill_value, mask_fill_value, \n                         p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#crop",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#crop",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Crop",
+    "text": "Crop\nCrop region from image.\n\nfrom albumentations.augmentations.transforms import Crop\n\n\nx_min=0\ny_min=0\nx_max=384\ny_max=200\n\n\ntransform =Crop(x_min, y_min, x_max, y_max, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#elastictransform",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#elastictransform",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "ElasticTransform",
+    "text": "ElasticTransform\nElastic deformation of images as described in [Simard2003]_ (with modifications). Based on https://gist.github.com/erniejunior/601cdf56d2b424757de5\n\nfrom albumentations.augmentations.transforms import ElasticTransform\n\n\nalpha=10\nsigma=150\nalpha_affine=50\ninterpolation=1\nborder_mode=4\nvalue=17\nmask_value=105\n\n\ntransform = ElasticTransform (alpha, sigma, alpha_affine, interpolation, border_mode, value, mask_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#flip",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#flip",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Flip",
+    "text": "Flip\nFlip the input either horizontally, vertically or both horizontally and vertically.\n\nfrom albumentations.augmentations.transforms import Flip\n\ntransform = Flip(p=1.0)\nd=-1\n\naugmented_image = transform(image=image, d=d)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#griddistortion",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#griddistortion",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "GridDistortion",
+    "text": "GridDistortion\nAdd distorition to the image, not really well documanted, hyperparameters are not clear for me\n\nfrom albumentations.augmentations.transforms import GridDistortion\n\nnum_steps=50\ndistort_limit=0.5\ninterpolation=1\nborder_mode=4\nvalue=None\nmask_value=None\n\ntransform = GridDistortion(num_steps, distort_limit, interpolation, border_mode, value, mask_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#griddropout",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#griddropout",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "GridDropout",
+    "text": "GridDropout\nGridDropout, drops out rectangular regions of an image and the corresponding mask in a grid fashion.\nInspired by Chen et al. paper from 2020, avalible here: https://arxiv.org/pdf/2001.04086.pdf\n\nfrom albumentations.augmentations.transforms import GridDropout\n\nratio=0.4\nunit_size_min=2\nunit_size_max=19\nholes_number_x= 10\nholes_number_y= 10\nshift_x=100 \nshift_y=0\nrandom_offset=False\n\ntransform = GridDropout(ratio, unit_size_min, unit_size_max, holes_number_x,\n                        holes_number_y, shift_x, shift_y, random_offset, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#horizontalflip",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#horizontalflip",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "HorizontalFlip",
+    "text": "HorizontalFlip\nFlip the input horizontally around the y-axis.\n\nfrom albumentations.augmentations.transforms import HorizontalFlip\n\ntransform = HorizontalFlip(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaaffine",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaaffine",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAAAffine",
+    "text": "IAAAffine\nPlace a regular grid of points on the input and randomly move the neighbourhood of these point around via affine transformations.\n\nfrom albumentations.imgaug.transforms import IAAAffine\n\nscale=0.1\ntranslate_percent=10\ntranslate_px=None\nrotate=0.5\nshear=0.5\norder=1\ncval=0\nmode='reflect'\n\ntransform = IAAAffine(scale, translate_percent, translate_px, rotate, shear, order, cval, mode, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaadditivegaussiannoise",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaadditivegaussiannoise",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAAAdditiveGaussianNoise",
+    "text": "IAAAdditiveGaussianNoise\nAdd gaussian noise to the input image.\n\nfrom albumentations.imgaug.transforms import IAAAdditiveGaussianNoise\n\nloc=50\nscale=(5, 12.75)\nper_channel=True\n\ntransform = IAAAdditiveGaussianNoise(loc, scale, per_channel, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaemboss",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaemboss",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAAEmboss",
+    "text": "IAAEmboss\nEmboss the input image and overlays the result with the original image.\n\nfrom albumentations.imgaug.transforms import IAAEmboss\n\nalpha=(0.2, 0.5)\nstrength=(0.2, 0.7)\n\ntransform = IAAEmboss(alpha, strength, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaperspective",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaaperspective",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAAPerspective",
+    "text": "IAAPerspective\nPerform a random four point perspective transform of the input.\n\nfrom albumentations.augmentations.transforms import Flip\n\ntransform = Flip(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaapiecewiseaffine",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaapiecewiseaffine",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAAPiecewiseAffine",
+    "text": "IAAPiecewiseAffine\nPerform a random four point perspective transform of the input.\n\nfrom albumentations.imgaug.transforms import IAAPerspective \n\nscale=(0.3, 0.1)\nkeep_size=True\n\ntransform = IAAPerspective(scale, keep_size, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaasharpen",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaasharpen",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAASharpen",
+    "text": "IAASharpen\nSharpen the input image and overlays the result with the original image.\n\nfrom albumentations.imgaug.transforms import IAAPerspective \n\nalpha=(0.1, 0.3)\nlightness=(0.1, 1.0)\n\ntransform = IAAPerspective(alpha, lightness, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaasuperpixels",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#iaasuperpixels",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "IAASuperpixels",
+    "text": "IAASuperpixels\nCompletely or partially transform the input image to its superpixel representation. Uses skimage’s version of the SLIC algorithm. May be slow.\n\nfrom albumentations.imgaug.transforms import IAASuperpixels \n\np_replace=0.5\nn_segments=10\n\ntransform = IAASuperpixels(p_replace, n_segments, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#longestmaxsize",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#longestmaxsize",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "LongestMaxSize",
+    "text": "LongestMaxSize\nRescale an image so that maximum side is equal to max_size, keeping the aspect ratio of the initial image.\n\nfrom albumentations.augmentations.transforms import LongestMaxSize\n\ntransform = LongestMaxSize(max_size=512, interpolation=1, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#opticaldistortion",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#opticaldistortion",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "OpticalDistortion",
+    "text": "OpticalDistortion\nNo description, hyperparameters not clear\n\nfrom albumentations.augmentations.transforms import OpticalDistortion\n\ndistort_limit=2.5\nshift_limit=0.9\ninterpolation=1\nborder_mode=4\nvalue=None\nmask_value=None\n\ntransform = OpticalDistortion(distort_limit, shift_limit, interpolation, border_mode, value, mask_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomcrop",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomcrop",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomCrop",
+    "text": "RandomCrop\nCrop a random part of the input.\n\nfrom albumentations.augmentations.transforms import RandomCrop\n\nheight, width = 300, 200\n\ntransform = RandomCrop(height, width, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomgridshuffle",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomgridshuffle",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomGridShuffle",
+    "text": "RandomGridShuffle\nRandom shuffle grid’s cells on image.\n\nfrom albumentations.augmentations.transforms import RandomGridShuffle\n\ntransform = RandomGridShuffle(grid=(4, 3), p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomresizedcrop",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomresizedcrop",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomResizedCrop",
+    "text": "RandomResizedCrop\nTorchvision’s variant of crop a random part of the input and rescale it to some size.\n\nfrom albumentations.augmentations.transforms import RandomResizedCrop\n\nheight, width = 384, 384\nscale=(0.08, 1.0)\nratio=(0.75, 1.3333333333333333)\ninterpolation=1\n\ntransform = RandomResizedCrop(height, width, scale, ratio, interpolation, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomrotate90",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomrotate90",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomRotate90",
+    "text": "RandomRotate90\nRandomly rotate the input by 90 degrees zero or more times.\n\nfrom albumentations.augmentations.transforms import RandomRotate90\n\ntransform = RandomRotate90(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomscale",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomscale",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomScale",
+    "text": "RandomScale\nRandomly resize the input. Output image size is different from the input image size.\n\nfrom albumentations.augmentations.transforms import RandomScale\n\nscale_limit=0.5\ninterpolation=1\n\ntransform = RandomScale(scale_limit, interpolation, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomsizedcrop",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#randomsizedcrop",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "RandomSizedCrop",
+    "text": "RandomSizedCrop\nCrop a random part of the input and rescale it to some size.\n\nfrom albumentations.augmentations.transforms import RandomSizedCrop\n\nmin_max_height = (150, 250)\nheight = 384\nwidth = 384\nw2h_ratio = 0.5\ninterpolation=1\n\ntransform = RandomSizedCrop(min_max_height, height, width, w2h_ratio, interpolation, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#resize",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#resize",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Resize",
+    "text": "Resize\nResize the input to the given height and width.\n\nfrom albumentations.augmentations.transforms import Resize\n\nheight, width = 200, 200\n\ntransform = Resize(height, width, interpolation=1, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#rotate",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#rotate",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Rotate",
+    "text": "Rotate\n\nfrom albumentations.augmentations.transforms import Rotate\n\nlimit=90\ninterpolation=1\nborder_mode=4\nvalue=None\nmask_value=None\n\ntransform = Rotate(limit, interpolation, border_mode, value, mask_value, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#shiftscalerotate",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#shiftscalerotate",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "ShiftScaleRotate",
+    "text": "ShiftScaleRotate\nRescale an image so that minimum side is equal to max_size, keeping the aspect ratio of the initial image.\n\nfrom albumentations.augmentations.transforms import ShiftScaleRotate\n\nshift_limit=0.0625\nscale_limit=0.5\nrotate_limit=90\ninterpolation=1\n\ntransform = ShiftScaleRotate(shift_limit, scale_limit, rotate_limit, interpolation, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#smallestmaxsize",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#smallestmaxsize",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "SmallestMaxSize",
+    "text": "SmallestMaxSize\n\nfrom albumentations.augmentations.transforms import SmallestMaxSize\n\nmax_size=500\ninterpolation=1\n\ntransform = SmallestMaxSize (max_size, interpolation, p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#transpose",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#transpose",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "Transpose",
+    "text": "Transpose\nTranspose the input by swapping rows and columns.\n\nfrom albumentations.augmentations.transforms import Transpose\n\ntransform = Transpose(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#verticalflip",
+    "href": "posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html#verticalflip",
+    "title": "Overview and visualization of spatial-level transforms from albumentations package",
+    "section": "VerticalFlip",
+    "text": "VerticalFlip\nFlip the input vertically around the x-axis.\n\nfrom albumentations.augmentations.transforms import VerticalFlip\n\ntransform = VerticalFlip(p=1.0)\n\naugmented_image = transform(image=image)['image']\nImage.fromarray(augmented_image)"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "posts/2020-09-30-character-level-text-generation-with-rnns.html",
+    "href": "posts/2020-09-30-character-level-text-generation-with-rnns.html",
+    "title": "Character level text generation with RNNs using PyTorch Lightning",
+    "section": "",
+    "text": "In this article, we will show how to generate the text using Recurrent Neural Networks. We will use it to generate surnames of people and while doing so we will take into account the country they come from.\nAs a recurrent network, we will use LSTM. For the training, we will use PyTorch Lightning. We will show how to use the collate_fn so we can have batches of sequences of the different lengths.\nThe article was inspired by https://pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html, the data used for the training was also taken from there"
+  },
+  {
+    "objectID": "posts/2020-09-30-character-level-text-generation-with-rnns.html#dataoader",
+    "href": "posts/2020-09-30-character-level-text-generation-with-rnns.html#dataoader",
+    "title": "Character level text generation with RNNs using PyTorch Lightning",
+    "section": "Dataoader",
+    "text": "Dataoader\nThe Dataset returns sequences of a different length, which might cause problems, due to that we need to define the collate_fn method which will handle this issue. It will add padding (0) to at the end of the sequences that are shorter than the longest sentence in a batch. Thanks to that we can work with batches of size other than one\n\ndef collate_fn(data):\n    def merge(sequences):\n        \"https://github.com/yunjey/seq2seq-dataloader/blob/master/data_loader.py\"\n        \n        lengths = [len(seq) for seq in sequences]\n        padded_seqs = torch.zeros(len(sequences), max(lengths)).long()\n        for i, seq in enumerate(sequences):\n            end = lengths[i]\n            padded_seqs[i, :end] = seq[:end]\n        return padded_seqs, lengths\n\n    categories = [x[\"category\"] for x in data]          \n    names = [x[\"name\"] for x in data]          \n    category_tensors = torch.cat([x[\"category_tensor\"] for x in data])\n    \n    input_tensors = [x[\"input_tensor\"] for x in data]\n    input_tensors, _ = merge(input_tensors)\n    \n    target_tensors = [x[\"target_tensor\"] for x in data]\n    target_tensors, _ = merge(target_tensors)\n    \n    return categories, names, category_tensors, input_tensors, target_tensors\n\n\ndl = DataLoader(ds, batch_size=1, collate_fn=collate_fn, shuffle=True)\n\n\nnext(iter(dl))\n\n(['Czech'],\n ['Lawa'],\n tensor([[1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]]),\n tensor([[38,  1, 23,  1]]),\n tensor([[ 1, 23,  1, 59]]))"
+  },
+  {
+    "objectID": "posts/2020-09-30-character-level-text-generation-with-rnns.html#rnn-lightning",
+    "href": "posts/2020-09-30-character-level-text-generation-with-rnns.html#rnn-lightning",
+    "title": "Character level text generation with RNNs using PyTorch Lightning",
+    "section": "RNN Lightning",
+    "text": "RNN Lightning\nWe define a RNN. As a loss function, we will use CrossEntropyLoss\n\nclass RNN(pl.LightningModule):\n    lr = 5e-4\n\n    def __init__(self, input_size, hidden_size, embeding_size, n_categories, n_layers, output_size, p):\n        super().__init__()\n\n        self.criterion = nn.CrossEntropyLoss()\n        \n        self.n_layers = n_layers\n        self.hidden_size = hidden_size\n        \n        \n        self.embeding = nn.Embedding(input_size+n_categories, embeding_size)\n        self.lstm = nn.LSTM(embeding_size+n_categories, hidden_size, n_layers, dropout=p)\n        self.out_fc = nn.Linear(hidden_size, output_size)\n        \n        self.dropout = nn.Dropout(p)\n        \n\n    def forward(self, batch_of_category, batch_of_letter, hidden, cell):\n        ## letter level operations\n        \n        embeding = self.dropout(self.embeding(batch_of_letter))\n        category_plus_letter = torch.cat((batch_of_category, embeding), 1)\n\n        #sequence_length = 1\n        category_plus_letter = category_plus_letter.unsqueeze(1)\n        \n        out, (hidden, cell) = self.lstm(category_plus_letter, (hidden, cell))\n        out = self.out_fc(out)\n        out = out.squeeze(1)\n        \n        return out, (hidden, cell)\n        \n\n    def configure_optimizers(self):\n        optimizer = Adam(self.parameters(), self.lr)\n        scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)\n\n        return [optimizer], [scheduler]\n\n    def training_step(self, batch, batch_idx):\n        item_dict = batch\n        loss = 0\n        batch_of_category = item_dict[\"category_tensors\"]\n\n        #to(device) needed due to some problem with PL\n        hidden = torch.zeros(self.n_layers, 1, self.hidden_size).to(self.device)\n        cell = torch.zeros(self.n_layers, 1, self.hidden_size).to(self.device)\n\n        #we loop over letters, single batch at the time \n        for t in range(item_dict[\"input_tensors\"].size(1)):\n            batch_of_letter = item_dict[\"input_tensors\"][:, t]\n            \n            output, (hidden, cell) = self(batch_of_category, batch_of_letter, hidden, cell)\n            \n            loss += self.criterion(output, item_dict[\"target_tensors\"][:, t])\n\n        loss = loss/(t+1)\n\n        tensorboard_logs = {'train_loss': loss}\n\n        return {'loss': loss, 'log': tensorboard_logs}\n    \n    \n    def init_hidden(self, batch_size):\n        hidden = torch.zeros(self.n_layers, batch_size, self.hidden_size)\n        cell = torch.zeros(self.n_layers, batch_size, self.hidden_size)\n        \n        return hidden, cell"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "",
+    "text": "In this article, we will convert a deep learning model to ONNX format. We will a Lightning module based on the Efficientnet B1 and we will export it to onyx format. We will show two approaches: 1) Standard torch way of exporting the model to ONNX 2) Export using a torch lighting method\nONNX is an open format built to represent machine learning models. ONNX defines a common set of operators - the building blocks of machine learning and deep learning models - and a common file format to enable AI developers to use models with a variety of frameworks, tools, runtimes, and compilers. It is adopted and developed by several top-tier tech companies, such as Facebook, Microsoft, Amazon, and others. Models in onyx format can be easily deployed to various cloud platforms as well as to IoT devices."
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#imports",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#imports",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Imports",
+    "text": "Imports\n\nimport torch\nfrom torch import nn\nfrom torch.optim import lr_scheduler, Adam\nfrom torch.utils.data import DataLoader\n\nimport torchvision\nimport torchvision.transforms as transforms\n\nimport pytorch_lightning as pl\nfrom pytorch_lightning.metrics import Recall, Accuracy\nfrom pytorch_lightning import Trainer\nfrom pytorch_lightning.callbacks import ModelCheckpoint\nfrom pytorch_lightning.loggers import TensorBoardLogger\n\nfrom efficientnet_pytorch import EfficientNet\n\nimport os\nfrom tqdm.auto import tqdm\nfrom sklearn.metrics import classification_report\nimport numpy as np"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#datamodule",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#datamodule",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Datamodule",
+    "text": "Datamodule\n\nclass ImageClassificationDatamodule(pl.LightningDataModule):\n    def __init__(self, batch_size, train_transform, val_transform):\n        super().__init__()\n        self.batch_size = batch_size\n        self.train_transform = train_transform\n        self.val_transform = val_transform\n\n    def setup(self, stage=None):\n        self.train_set = torchvision.datasets.CIFAR10(root='./data', train=True,\n                                        download=True, transform=self.train_transform)\n\n        self.val_set = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=self.val_transform)\n\n    def train_dataloader(self):\n        return DataLoader(self.train_set, batch_size=self.batch_size, shuffle=True, num_workers=4)\n\n    def val_dataloader(self):\n        return DataLoader(self.val_set, batch_size=self.batch_size, shuffle=False, num_workers=4)"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#lightning-module",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#lightning-module",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Lightning module",
+    "text": "Lightning module\n\nclass ImageClassifier(pl.LightningModule):\n    lr = 1e-3\n\n    def __init__(self):\n        super().__init__()\n\n        self.criterion = nn.CrossEntropyLoss()\n        self.metrics = {\"accuracy\": Accuracy(), \"recall\": Recall()}\n\n        self.model = EfficientNet.from_pretrained('efficientnet-b1',\n                                                  num_classes=10,\n                                                  in_channels=3)\n\n    def forward(self, x):\n        return self.model(x)\n\n    def configure_optimizers(self):\n        optimizer = Adam(self.parameters(), self.lr)\n        scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)\n\n        return [optimizer], [scheduler]\n\n    def training_step(self, batch, batch_idx):\n        x, y = batch\n        logits = self.forward(x)\n\n        loss = self.criterion(logits, y)\n\n        tensorboard_logs = {'train_loss': loss}\n\n        return {'loss': loss, 'log': tensorboard_logs}\n\n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n        logits = self.forward(x)\n\n        loss = self.criterion(logits, y)\n\n        metrics_dict = {f\"val_{name}\": metric(logits, y) for name, metric in self.metrics.items()}\n\n        return {**{\"val_loss\": loss}, **metrics_dict}\n\n    def validation_epoch_end(self, outputs):\n        avg_loss = torch.stack([x[\"val_loss\"] for x in outputs]).mean()\n\n        tensorboard_logs = {name: torch.stack([x[f\"val_{name}\"] for x in outputs]).mean()\n                            for name, metric in self.metrics.items()}\n\n        tensorboard_logs[\"val_loss\"] = avg_loss\n\n        return {'avg_val_loss': avg_loss, 'log': tensorboard_logs}"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#training-loop",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#training-loop",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Training loop",
+    "text": "Training loop\n\ntrain_transform = transforms.Compose([\n    transforms.RandomCrop(32, padding=4),\n    transforms.RandomHorizontalFlip(),\n    transforms.ToTensor(),\n    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),\n])\n\nval_transform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),\n])\n\n\ndm = ImageClassificationDatamodule(128, train_transform, val_transform)\n\nmodel = ImageClassifier()\n\ncheckpoint_callback = ModelCheckpoint(\n    filepath=os.getcwd(),\n    save_top_k=1,\n    verbose=True,\n    monitor='val_loss',\n    mode='min',\n)\n\nTENSORBOARD_DIRECTORY = \"logs/\"\nEXPERIMENT_NAME = \"efficienet_b1\"\nlogger = TensorBoardLogger(TENSORBOARD_DIRECTORY, name=EXPERIMENT_NAME)\n\n#And then actual training\ntrainer = Trainer(max_epochs=10,\n                  logger=logger,\n                  gpus=1,\n                  # precision=16,\n                  accumulate_grad_batches=4,\n                  deterministic=True,\n                  early_stop_callback=True,\n                  checkpoint_callback=checkpoint_callback,\n                  # resume_from_checkpoint = 'my_checkpoint.ckpt'\n                  )\n\ntrainer.fit(model, dm)\n\nDownloading: \"https://github.com/lukemelas/EfficientNet-PyTorch/releases/download/1.0/efficientnet-b1-f1951068.pth\" to /root/.cache/torch/hub/checkpoints/efficientnet-b1-f1951068.pth\n\n\n\n\n\n/usr/local/lib/python3.6/dist-packages/pytorch_lightning/utilities/distributed.py:37: UserWarning: Checkpoint directory /content exists and is not empty with save_top_k != 0.All files in this directory will be deleted when a checkpoint is saved!\n  warnings.warn(*args, **kwargs)\nGPU available: True, used: True\nTPU available: False, using: 0 TPU cores\nCUDA_VISIBLE_DEVICES: [0]\n\n\n\nLoaded pretrained weights for efficientnet-b1\nDownloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar-10-python.tar.gz\n\n\n\n\n\nExtracting ./data/cifar-10-python.tar.gz to ./data\nFiles already downloaded and verified\n\n\n\n  | Name      | Type             | Params\n-----------------------------------------------\n0 | criterion | CrossEntropyLoss | 0     \n1 | model     | EfficientNet     | 6 M   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEpoch 00000: val_loss reached 1.04839 (best 1.04839), saving model to /content/epoch=0.ckpt as top 1\n\n\n\n\n\n\nEpoch 00001: val_loss reached 0.81029 (best 0.81029), saving model to /content/epoch=1.ckpt as top 1\n\n\n\n\n\n\nEpoch 00002: val_loss reached 0.65911 (best 0.65911), saving model to /content/epoch=2.ckpt as top 1\n\n\n\n\n\n\nEpoch 00003: val_loss reached 0.63399 (best 0.63399), saving model to /content/epoch=3.ckpt as top 1\n\n\n\n\n\n\nEpoch 00004: val_loss reached 0.56925 (best 0.56925), saving model to /content/epoch=4.ckpt as top 1\n\n\n\n\n\n\nEpoch 00005: val_loss reached 0.54162 (best 0.54162), saving model to /content/epoch=5.ckpt as top 1\n\n\n\n\n\n\nEpoch 00006: val_loss reached 0.52157 (best 0.52157), saving model to /content/epoch=6.ckpt as top 1\n\n\n\n\n\n\nEpoch 00007: val_loss reached 0.46342 (best 0.46342), saving model to /content/epoch=7.ckpt as top 1\n\n\n\n\n\n\nEpoch 00008: val_loss reached 0.45730 (best 0.45730), saving model to /content/epoch=8.ckpt as top 1\n\n\n\n\n\n\nEpoch 00009: val_loss reached 0.45397 (best 0.45397), saving model to /content/epoch=9.ckpt as top 1\nSaving latest checkpoint..\n\n\n\n\n\n1"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#show-some-training-statistics",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#show-some-training-statistics",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Show some training statistics",
+    "text": "Show some training statistics\n\n%load_ext tensorboard\n%tensorboard --logdir logs\n\n\n\n\n\nclasses = ('plane', 'car', 'bird', 'cat',\n           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')\n\n\nval_dl = DataLoader(torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=val_transform), batch_size=128, shuffle=True, num_workers=4)\n\nFiles already downloaded and verified\n\n\n\nmodel.to(\"cuda\")\nmodel.eval()\nprint()\n\n\n\n\n\npredictions = []\ntargets = []\nfor X, y in tqdm(val_dl):\n    outputs = torch.nn.Softmax(dim=1)(model(X.to(\"cuda\")))\n    _, predicted = torch.max(outputs, 1)\n    predictions.append(predicted.detach())\n    targets.append(y.detach())\n\n\n\n\n\n\n\n\npredictions = (torch.cat(predictions)).cpu().numpy() \ntargets = (torch.cat(targets)).cpu().numpy()\n\n\nprint(classification_report(targets, predictions, target_names=classes))\n\n              precision    recall  f1-score   support\n\n       plane       0.84      0.86      0.85      1000\n         car       0.93      0.91      0.92      1000\n        bird       0.84      0.78      0.81      1000\n         cat       0.69      0.72      0.70      1000\n        deer       0.79      0.85      0.82      1000\n         dog       0.80      0.72      0.76      1000\n        frog       0.87      0.92      0.90      1000\n       horse       0.90      0.86      0.88      1000\n        ship       0.90      0.91      0.90      1000\n       truck       0.88      0.90      0.89      1000\n\n    accuracy                           0.84     10000\n   macro avg       0.84      0.84      0.84     10000\nweighted avg       0.84      0.84      0.84     10000"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#do-the-example-prediction",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#do-the-example-prediction",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Do the example prediction",
+    "text": "Do the example prediction\nONNX needs some input data, so it knows its shape. Since we already have a dataloader we don’t need to create dummy random data of the wanted shape\n\nX, y = next(iter(val_dl))\nprint(f\"Model input: {X.size()}\")\ntorch_out = model(X.to(\"cuda\"))\nprint(f\"Model output: {torch_out.detach().cpu().size()}\")\n\nModel input: torch.Size([128, 3, 32, 32])\nModel output: torch.Size([128, 10])"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#convert-model-to-onnx---standard-torch-approach",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#convert-model-to-onnx---standard-torch-approach",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Convert model to ONNX - standard torch approach",
+    "text": "Convert model to ONNX - standard torch approach\nInspired by: https://pytorch.org/tutorials/advanced/super_resolution_with_onnxruntime.html\nWe export the PyTorch Lightning model similarly as we would do with a normal torch model\n\n## a necessary fix, applicable only for Efficientnet\nmodel.model.set_swish(memory_efficient=False)\n\n\n# # Export the model\ntorch.onnx.export(model,                     # model being run\n                  ##since model is in the cuda mode, input also need to be\n                  X.to(\"cuda\"),              # model input (or a tuple for multiple inputs)\n                  \"model_troch_export.onnx\", # where to save the model (can be a file or file-like object)\n                  export_params=True,        # store the trained parameter weights inside the model file\n                  opset_version=10,          # the ONNX version to export the model to\n                  do_constant_folding=True,  # whether to execute constant folding for optimization\n                  input_names = ['input'],   # the model's input names\n                  output_names = ['output'], # the model's output names\n                  dynamic_axes={'input' : {0 : 'batch_size'},    # variable lenght axes\n                                'output' : {0 : 'batch_size'}})\n\n\nls\n\n data/  'epoch=9.ckpt'   logs/   model_troch_export.onnx   sample_data/"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#convert-model-to-onnx---standard-torch-approach-1",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#convert-model-to-onnx---standard-torch-approach-1",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Convert model to ONNX - standard torch approach",
+    "text": "Convert model to ONNX - standard torch approach\nPyTorch Lightning has its own method for exporting the model. The arguments are similar as in torch.onnx.export method\n\n## a necessary fix, applicable only for Efficientnet\nmodel.model.set_swish(memory_efficient=False)\n\n\nmodel.to_onnx(\"model_lightnining_export.onnx\", \n                X.to(\"cuda\"),\n                export_params=True,\n                input_names = ['input'],  \n                output_names = ['output'], \n                dynamic_axes={'input' : {0 : 'batch_size'},'output' : {0 : 'batch_size'}})\n\n\nls\n\n data/           logs/                           model_troch_export.onnx\n'epoch=9.ckpt'   model_lightnining_export.onnx   sample_data/"
+  },
+  {
+    "objectID": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#do-the-prediction-with-onnx",
+    "href": "posts/2020-09-21-exporting-lightning-model-to-onnx.html#do-the-prediction-with-onnx",
+    "title": "Exporting PyTorch Lightning model to ONNX format",
+    "section": "Do the prediction with ONNX",
+    "text": "Do the prediction with ONNX\nSince we want to do the predicton on the GPU we need to make sure that CUDA is avaible as onnxruntime provider and is a first provider\n\nimport onnxruntime\nimport onnx\n\nort_session = onnxruntime.InferenceSession(\"model_lightnining_export.onnx\")\n\nort_session.get_providers()\n\n['CUDAExecutionProvider', 'CPUExecutionProvider']\n\n\n\nonnx_model = onnx.load(\"model_lightnining_export.onnx\")\nonnx.checker.check_model(onnx_model)\n\n\ndef to_numpy(tensor):\n    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()\n\n##We set the batch size to the dynamic_axes, so we can use batch of any size we like, 10 in this example\n# compute ONNX Runtime output prediction\nort_inputs = {ort_session.get_inputs()[0].name: to_numpy(X[:10])} \nort_outs = ort_session.run(None, ort_inputs)\n\n# compare ONNX Runtime and PyTorch results\nnp.testing.assert_allclose(to_numpy(torch_out[:10]), ort_outs[0], rtol=1e-03, atol=1e-05)\n\nprint(\"Exported model has been tested with ONNXRuntime, and the result looks good!\")\n\nExported model has been tested with ONNXRuntime, and the result looks good!\n\n\n\nort_outs[0].shape\n\n(10, 10)"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html",
+    "href": "posts/2020-09-09-lime-biased-dataset.html",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "",
+    "text": "In 2016 Marco Riberio et al. proposed a new method for explaining AI models named LIME. Abbreviation LIME stands for Local Interpretable Model-Agnostic Explanations. The algorithm is capable of explaining any type of machine-learning model (that’s why it is called “model agnostic) and works well with tabular, language, and image data.\nThe LIME algorithm is available in the form of a python package, its code can be found on the Github at https://github.com/marcotcr/lime\nIn this tutorial, we will show how LIME can be applied to investigate the deep learning model behavior. We will show that despite the model achieving good accuracy on a validation set it actually doesn’t work. Such behavior is caused by a biased dataset and may cause real harm when the model is used for real-world applications. It may be especially dangerous in the case of medical imagining where it is nearly impossible for a non-medical professional to say whether or not the analyzed dataset of x-ray images is somehow biased.\nThe proposed pet dataset contains two classes: Huskies and Wolves. The gathered data are intentionally biased - wolfs are always presented in a winter background with snow around them, while husky stand or lay on the grass. Even though it sounds obvious that such a dataset may cause a model to not perform well, it is still not so easy to spot this fact at a first glance, without having the prior knowledge about what is wrong. Riberio et al. gave such a dataset to the group of graduate students and only a minority of them spot the problem. Most of the students trusted the model based only on the accuracy metric.\nThe train set consists of 50 images of huskies and 50 images of wolfs. The validation set contains 5 images of huskies and 5 images of wolfs. In the validation set 8 images to come from a similar domain as the training set (a husky on the grass, a wolf in the snow) while in the case of two we intentionally changed the usual background (husky on the snow and wolf on the grass).\nIn this tutorial, we first train the torch model (resnet50) on the dataset, and then we use LIME to see which part of the image had the most significant contrubution to such prediction. The intuition behind is: if the model “looks” at the irrelevant part of the image then even if it is highly accurate on the validation set it probably doesn’t work properly. The reason for that might be a biased dataset. In this case (wolf and husks) is relatively easy even for a layman to spot a problem, however, for a more complicated task (eg. classification of tumors on the images), it may be a highly complicated problem requiring lots of research and domain knowledge."
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#imports",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#imports",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Imports",
+    "text": "Imports\n\nfrom os import listdir\nfrom os.path import join\nfrom torchvision import transforms\n\nimport torch\nfrom torch.optim import lr_scheduler\nfrom torch import nn\nimport torch.nn.functional as F\nimport torchvision.models as models\nimport pytorch_lightning as pl\n\nimport albumentations as A\nfrom albumentations.pytorch import ToTensorV2\n\nfrom skimage.segmentation import mark_boundaries\nfrom lime import lime_image\n\nfrom lime_image.dataset import HuskyWolfDataset\nfrom lime_image.datamodule import HuskyWolfDataModule\n\nimport matplotlib.pyplot as plt\nfrom matplotlib.pyplot import imshow\n\nfrom PIL import Image\n\n\nfrom sklearn.metrics import accuracy_score"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#directories-with-gathered-datasets",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#directories-with-gathered-datasets",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Directories with gathered datasets",
+    "text": "Directories with gathered datasets\n\nhusky_train_path = join(\"lime_image\", \"husky_train\")\nwolf_train_path = join(\"lime_image\", \"wolf_train\")\n\nhusky_test_path = join(\"lime_image\", \"husky_test\")\nwolf_test_path = join(\"lime_image\", \"wolf_test\")"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#husky-train",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#husky-train",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Husky train",
+    "text": "Husky train\n\nfiles = [(join(husky_train_path, file)) for file in listdir(husky_train_path)]\n\nimshow(Image.open(files[0]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[1]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[2]).resize((244, 244)))\nplt.show()"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#husky-test",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#husky-test",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Husky test",
+    "text": "Husky test\n\nfiles = [(join(husky_test_path, file)) for file in listdir(husky_test_path)]\n\nimshow(Image.open(files[0]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[1]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[4]).resize((244, 244)))\nplt.show()"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#wofl-train",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#wofl-train",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Wofl train",
+    "text": "Wofl train\n\nfiles = [(join(wolf_train_path, file)) for file in listdir(wolf_train_path)]\n\nimshow(Image.open(files[0]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[1]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[2]).resize((244, 244)))\nplt.show()"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#wofl-test",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#wofl-test",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Wofl test",
+    "text": "Wofl test\n\nfiles = [(join(wolf_test_path, file)) for file in listdir(wolf_test_path)]\n\nimshow(Image.open(files[0]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[1]).resize((244, 244)))\nplt.show()\n\nimshow(Image.open(files[2]).resize((244, 244)))\nplt.show()"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#define-the-model",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#define-the-model",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Define the model",
+    "text": "Define the model\nAs a base model, we will use resnet50. We will train it using PyTorch Lighting. Since our dataset is relatively small we will use the transfer learning technique and train only the last layer.\n\nclass WolfHuskyClassifier(pl.LightningModule):\n    def __init__(self):\n        super(WolfHuskyClassifier, self).__init__()\n        self.criterion = nn.CrossEntropyLoss()\n        \n        self.model = models.resnet50(pretrained=True)\n        \n        ## Only the last layer is trained\n        for p in self.model.parameters():\n            p.requires_grad = False\n\n        self.num_ftrs = self.model.fc.in_features\n        self.number_of_classes = 2\n        self.model.fc = nn.Linear(self.num_ftrs, self.number_of_classes)\n    \n    \n    def forward(self, x):\n        return self.model(x)\n\n    \n    def configure_optimizers(self):\n        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)\n        scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)\n        \n        return [optimizer], [scheduler]\n    \n    \n    def training_step(self, batch, batch_idx):\n        x, y = batch\n        \n        logits = self.forward(x)\n        loss = self.criterion(logits, y)\n        \n        tensorboard_logs = {'train_loss': loss}\n        \n        return {'loss': loss, 'log': tensorboard_logs}\n\n    \n    def validation_step(self, batch, batch_idx):\n        x, y = batch\n\n        logits = self.forward(x)\n        loss = self.criterion(logits, y)\n        \n        return {\"val_loss\": loss}\n        \n    def validation_epoch_end(self, outputs):\n        avg_loss = torch.stack([x[\"val_loss\"] for x in outputs]).mean()\n        \n        tensorboard_logs = {\"val_loss\" : avg_loss}\n\n        return {'avg_val_loss': avg_loss, 'log': tensorboard_logs}"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#image-augmentations",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#image-augmentations",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Image augmentations",
+    "text": "Image augmentations\nTo artificially extend the dataset we will use random image transformations. To make it more “understandable” for a model we have to normalize it (we use standard ImageNet mean and std parameters).\n\nval_transform = A.Compose([\n            A.Resize(224, 224),\n            A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),\n            ToTensorV2()\n            ])\n\n\ntrain_transform = A.Compose([\n            A.Resize(400, 400),\n            A.RandomCrop(224, 224),\n            A.HorizontalFlip(),\n            A.RandomRotate90(),\n            A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.50, rotate_limit=45, p=.75),\n            A.Blur(blur_limit=3),\n            A.OpticalDistortion(),\n            A.GridDistortion(),\n            A.HueSaturationValue(),\n            A.Normalize(\n                mean=[0.485, 0.456, 0.406],\n                std=[0.229, 0.224, 0.225],\n            ),\n            ToTensorV2()\n        ])"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#start-training",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#start-training",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Start training",
+    "text": "Start training\n\npl.seed_everything(42)\n\ndm = HuskyWolfDataModule(2, train_transform, val_transform)\n\nmodel = WolfHuskyClassifier()\n\ntrainer = pl.Trainer(max_epochs=20,\n                  gpus=0,\n                  accumulate_grad_batches=4,\n                  deterministic=True,\n                  early_stop_callback=True,\n                  )\n\ntrainer.fit(model, dm)\n\nGPU available: False, used: False\nTPU available: False, using: 0 TPU cores\n\n  | Name      | Type             | Params\n-----------------------------------------------\n0 | criterion | CrossEntropyLoss | 0     \n1 | model     | ResNet           | 23 M  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSaving latest checkpoint..\nEpoch 00015: early stopping triggered.\n\n\n\n\n\n1"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#check-the-model-performance",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#check-the-model-performance",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Check the model performance",
+    "text": "Check the model performance\n\nwolf_husky_trainset = HuskyWolfDataset([husky_train_path, wolf_train_path], val_transform)\nwolf_husky_testset = HuskyWolfDataset([husky_test_path, wolf_test_path], val_transform)\n\n\nmodel.eval()\n\ny_pred = []\ny_true = []\nfor img, label in wolf_husky_trainset:\n    pred = torch.argmax(model(img.unsqueeze(0)))\n    y_pred.append(pred)\n    y_true.append(label)\n    \nprint(f\"Accuracy on train: {accuracy_score(y_true, y_pred)}\")    \nprint()\n\nwrong_preds = []\n\ny_pred = []\ny_true = []\nfor idx, (img, label) in enumerate(wolf_husky_testset):\n    pred = torch.argmax(model(img.unsqueeze(0)))\n      \n    if pred != label:\n        wrong_preds.append(idx)\n        \n    y_pred.append(pred)\n    y_true.append(label)\n      \nprint()      \nprint(f\"Accuracy on validation: {accuracy_score(y_true, y_pred)}\")\nprint()      \nprint(f\"Wrong preds: {wrong_preds}\")\n\nAccuracy on train: 1.0\n\n\nAccuracy on validation: 0.9090909090909091\n\nWrong preds: [6]"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#visualize-the-explaination",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#visualize-the-explaination",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Visualize the explaination",
+    "text": "Visualize the explaination\nAs we can see it was the background that contributed most to the prediction (the green field). Actually the relevant part - the body of the wolf, correctly “voted” against image be classified as a husky. Despite that, the contribution of grass was more significant and the image was classified incorrectly.\nNevertheless, regardless of the final prediction, we can see that there is something inherently wrong about the model. It focuses itself on the irrelevant pieces of data and mostly ignores the relevant. It should be an alarming sound for any machine-learning practitioner that maybe something in the training process (presumably the data) is not correct.\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\nplt.title(title)\nplt.imshow(img_boundry1)\n\n<matplotlib.image.AxesImage at 0x7f77e2fa00d0>\n\n\n\n\n\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(title)\nplt.imshow(img_boundry2)\n\n<matplotlib.image.AxesImage at 0x7f77c81b94f0>"
+  },
+  {
+    "objectID": "posts/2020-09-09-lime-biased-dataset.html#ok-how-about-explainations-for-another-images",
+    "href": "posts/2020-09-09-lime-biased-dataset.html#ok-how-about-explainations-for-another-images",
+    "title": "Is it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model",
+    "section": "Ok, how about explainations for another images",
+    "text": "Ok, how about explainations for another images\nLet us take 5 examples both classified correctly and let’s use LIME to see at what the trained model is “looking” in the decision-making process.\nUnsurprisingly in all cases, the background (grass/snow) has a significant impact on the outcome, which, as it was stated before should not be the case. On the other hand, we can see that our model is not totally useless. While making the decision, in some cases it still “looks” at the body of the animal, this can be a positive sing meaning that in case we provide the neural network with a less biased and more diverse data it might be able to classify the dataset correctly.\n\ninvestigated_img_0, real_label_0 = visualisation_testset[5]\ninvestigated_img_1, real_label_1 = visualisation_testset[0]\ninvestigated_img_2, real_label_2 = visualisation_testset[3]\ninvestigated_img_3, real_label_3 = visualisation_testset[7]\ninvestigated_img_4, real_label_4 = visualisation_testset[9]\n\n\ntest_pred = batch_predict([investigated_img_0, investigated_img_1, investigated_img_2, investigated_img_3, investigated_img_4])\npreds = test_pred.squeeze().argmax(axis=1)\nprint(f\"Predictions: {preds}\")\nprint(f\"Real Labels: {real_label_0.item(), real_label_1.item(), real_label_2.item(), real_label_3.item(), real_label_4.item()}\")\n\nPredictions: [1 0 0 1 1]\nReal Labels: (1, 0, 0, 1, 1)\n\n\n\nexplainer = lime_image.LimeImageExplainer()\nexplanation = explainer.explain_instance(\n                                         investigated_img_0,\n                                         batch_predict, # classification function\n                                         top_labels=1, \n                                         hide_color=0, \n                                         num_samples=1000)\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\ntitle = f\"Prediction {label_to_class[preds[0]]}, Real label: {label_to_class[real_label_0.item()]}\"\n\nplt.title(title)\nplt.imshow(img_boundry1)\nplt.show()\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(title)\nplt.imshow(img_boundry2)\n\n\n\n\n\n\n\n\n\n\n<matplotlib.image.AxesImage at 0x7f77e2f47970>\n\n\n\n\n\n\nexplainer = lime_image.LimeImageExplainer()\nexplanation = explainer.explain_instance(\n                                         investigated_img_1,\n                                         batch_predict, # classification function\n                                         top_labels=1, \n                                         hide_color=0, \n                                         num_samples=1000)\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\ntitle = f\"Prediction {label_to_class[preds[1]]}, Real label: {label_to_class[real_label_1.item()]}\"\nplt.title(title)\nplt.imshow(img_boundry1)\nplt.show()\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(f\"Prediction {preds[1]}, Real label: {real_label_1} \")\nplt.imshow(img_boundry2)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexplainer = lime_image.LimeImageExplainer()\nexplanation = explainer.explain_instance(\n                                         investigated_img_2,\n                                         batch_predict, # classification function\n                                         top_labels=1, \n                                         hide_color=0, \n                                         num_samples=1000)\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\ntitle = f\"Prediction {label_to_class[preds[2]]}, Real label: {label_to_class[real_label_2.item()]}\"\nplt.title(title)\nplt.imshow(img_boundry1)\nplt.show()\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(f\"Prediction {preds[2]}, Real label: {real_label_2} \")\nplt.imshow(img_boundry2)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexplainer = lime_image.LimeImageExplainer()\nexplanation = explainer.explain_instance(\n                                         investigated_img_3,\n                                         batch_predict, # classification function\n                                         top_labels=1, \n                                         hide_color=0, \n                                         num_samples=1000)\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\ntitle = f\"Prediction {label_to_class[preds[3]]}, Real label: {label_to_class[real_label_3.item()]}\"\nplt.title(title)\nplt.imshow(img_boundry1)\nplt.show()\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(title)\nplt.imshow(img_boundry2)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexplainer = lime_image.LimeImageExplainer()\nexplanation = explainer.explain_instance(\n                                         investigated_img_4,\n                                         batch_predict, # classification function\n                                         top_labels=1, \n                                         hide_color=0, \n                                         num_samples=1000)\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)\nimg_boundry1 = mark_boundaries(temp/255.0, mask)\n\ntitle = f\"Prediction {label_to_class[preds[4]]}, Real label: {label_to_class[real_label_4.item()]}\"\nplt.title(title)\nplt.imshow(img_boundry1)\nplt.show()\n\ntemp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=False, num_features=10, hide_rest=False)\nimg_boundry2 = mark_boundaries(temp/255.0, mask)\n\nplt.title(title)\nplt.imshow(img_boundry2)\nplt.show()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "tugot-blog",
+    "section": "",
+    "text": "Post With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJul 26, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJul 23, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTwitter scraping at scale - leverage multiprocessing to speed up the follower retrieval process\n\n\n\n\n\n\n\ntutorial\n\n\nmultiprocessing\n\n\n\n\n\n\n\n\n\n\n\nOct 27, 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCharacter level text generation with RNNs using PyTorch Lightning\n\n\n\n\n\n\n\nRNN\n\n\ntutorial\n\n\n\n\n\n\n\n\n\n\n\nSep 30, 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nExporting PyTorch Lightning model to ONNX format\n\n\n\n\n\n\n\nONNX\n\n\ntutorial\n\n\n\n\n\n\n\n\n\n\n\nSep 21, 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOverview and visualization of pixel-level transforms from albumentations package\n\n\n\n\n\n\n\nalbumentations\n\n\ndata-augmentation\n\n\ntutorial\n\n\n\n\n\n\n\n\n\n\n\nSep 20, 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOverview and visualization of spatial-level transforms from albumentations package\n\n\n\n\n\n\n\nalbumentations\n\n\ndata-augmentation\n\n\ntutorial\n\n\n\n\n\n\n\n\n\n\n\nSep 17, 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIs it a wolf or is it snow? Using the LIME algorithm to investigate the bias in the decision-making process of a deep learning model\n\n\n\n\n\n\n\nXAI\n\n\nLIME\n\n\n\n\n\n\n\n\n\n\n\nSep 9, 2020\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  }
+]
