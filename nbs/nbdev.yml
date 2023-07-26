@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "data-science-blog"
+  site-url: "https://tugot17.github.io/data-science-blog"
+  description: "Data science blog, https://tugot17.github.io/data-science-blog/"
+  repo-branch: master
+  repo-url: "https://github.com/tugot17/data-science-blog"
