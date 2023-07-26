@@ -2,13 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html",
-      "/posts/2020-10-27-twitter-scraping-at-scale.html",
-      "/posts/2020-09-30-character-level-text-generation-with-rnns.html",
       "/posts/2020-09-21-exporting-lightning-model-to-onnx.html",
-      "/posts/2020-09-20-pixel-level-transforms-using-albumentations-package.html",
-      "/posts/2020-09-17-spatial-level-transforms-using-albumentations-package.html",
       "/posts/2020-09-09-lime-biased-dataset.html"
     ]
   }
